@@ -1,0 +1,10 @@
+2026-04-28T10:07:07.110Z [INFO] ----------------------invoke appmod-list-jdks----------------------
+2026-04-28T10:07:07.110Z [INFO] [Tool.invoke]({name: appmod-list-jdks, modelId: auto, input: {
+  "sessionId": "",
+  "projectPath": "c:\\Users\\ADARSH PRIYADARSHI\\Documents\\Desktop\\Wayfinder.java"
+}}).
+2026-04-28T10:07:07.111Z [INFO] [Tool.invoke] do invoke.
+2026-04-28T10:07:07.126Z [INFO] [Tool.invoke]({result: {
+  "message": "We found following jdks in your system:\n\n1. Java 25.0.1\n   📁 Path: C:\\Program Files\\Java\\jdk-25\\bin\n   🏷️ Source: PATH\n\nTotal: 1 JDK installation(s) found"
+}}).
+2026-04-28T10:07:07.126Z [INFO] ----------------------invoked appmod-list-jdks----------------------

@@ -1,0 +1,6 @@
+wayfinder\TrafficService.class
+wayfinder\InsertLocation.class
+wayfinder\LocationService.class
+wayfinder\SignupService.class
+wayfinder\MongoGraphService.class
+wayfinder\InputHelper.class

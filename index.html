@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wayfinder — Smart Navigation System · Dehradun</title>
+  <meta name="description" content="Wayfinder Smart Navigation System for Dehradun — Real-time pathfinding, traffic monitoring, weather simulation and AI chatbot." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ─── SPLASH SCREEN ─── -->
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="url(#sg)" stroke-width="2"/>
+          <path d="M32 14 L44 38 L32 34 L20 38 Z" fill="url(#sg2)"/>
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#00C9FF"/>
+            </linearGradient>
+            <linearGradient id="sg2" x1="20" y1="14" x2="44" y2="38" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#00C9FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="splash-title">WAYFINDER</h1>
+      <p class="splash-sub">Smart Navigation System · Dehradun</p>
+      <div class="splash-bar"><div class="splash-fill"></div></div>
+      <p class="splash-status" id="splashStatus">Initialising systems…</p>
+    </div>
+  </div>
+
+  <!-- ─── TOP NAVBAR ─── -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-left">
+      <div class="logo-wrap">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="url(#ng)" stroke-width="2.5"/>
+          <path d="M32 14 L44 38 L32 34 L20 38 Z" fill="url(#ng2)"/>
+          <defs>
+            <linearGradient id="ng" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#00C9FF"/>
+            </linearGradient>
+            <linearGradient id="ng2" x1="20" y1="14" x2="44" y2="38" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#00C9FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">WAYFINDER</span>
+      </div>
+      <div class="nav-pills">
+        <button class="nav-pill active" id="navMap" onclick="showPanel('map')">🗺 Map</button>
+        <button class="nav-pill" id="navRoute" onclick="showPanel('route')">🛣 Routes</button>
+        <button class="nav-pill" id="navTraffic" onclick="showPanel('traffic')">🚦 Traffic</button>
+        <button class="nav-pill" id="navWeather" onclick="showPanel('weather')">🌤 Weather</button>
+        <button class="nav-pill" id="navBot" onclick="showPanel('bot')">🤖 ChatBot</button>
+        <button class="nav-pill" id="navFeedback" onclick="showPanel('feedback')">💬 Feedback</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-badge" id="networkBadge">
+        <span class="status-dot"></span>
+        <span id="networkLabel">Online</span>
+      </div>
+      <div class="clock" id="clockDisplay"></div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN LAYOUT ─── -->
+  <main class="app-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- SEARCH -->
+      <div class="sidebar-block">
+        <label class="block-label">📍 Origin</label>
+        <div class="search-wrap">
+          <input type="text" id="originInput" class="search-input" placeholder="e.g. Clock Tower" oninput="filterSuggestions('origin')" onblur="hideSuggestions('origin')" />
+          <ul class="suggestions" id="originSuggestions"></ul>
+        </div>
+
+        <label class="block-label" style="margin-top:12px;">🎯 Destination</label>
+        <div class="search-wrap">
+          <input type="text" id="destInput" class="search-input" placeholder="e.g. Mussoorie" oninput="filterSuggestions('dest')" onblur="hideSuggestions('dest')" />
+          <ul class="suggestions" id="destSuggestions"></ul>
+        </div>
+      </div>
+
+      <!-- ALGORITHM SELECTOR -->
+      <div class="sidebar-block">
+        <label class="block-label">⚙️ Algorithm</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" id="algoDijkstra" onclick="selectAlgo('Dijkstra')">Dijkstra</button>
+          <button class="algo-btn" id="algoAStar" onclick="selectAlgo('A*')">A* Search</button>
+          <button class="algo-btn" id="algoBellman" onclick="selectAlgo('Bellman-Ford')">Bellman-Ford</button>
+          <button class="algo-btn" id="algoFloyd" onclick="selectAlgo('Floyd-Warshall')">Floyd-Warshall</button>
+        </div>
+      </div>
+
+      <!-- FIND ROUTE BUTTON -->
+      <button class="btn-primary" id="findRouteBtn" onclick="findRoute()">
+        <span class="btn-icon">🚀</span> Find Optimal Route
+      </button>
+
+      <!-- RESULT PANEL -->
+      <div class="sidebar-block result-block" id="resultBlock" style="display:none;">
+        <div class="result-header">
+          <span class="result-algo-tag" id="resultAlgoTag"></span>
+          <span class="result-status" id="resultStatus">Optimal ✓</span>
+        </div>
+        <div class="result-route" id="resultRoute"></div>
+        <div class="result-stats">
+          <div class="stat-item">
+            <span class="stat-label">Distance</span>
+            <span class="stat-val" id="statDist">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Est. Time</span>
+            <span class="stat-val" id="statTime">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Nodes</span>
+            <span class="stat-val" id="statNodes">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCATION CATEGORIES -->
+      <div class="sidebar-block">
+        <label class="block-label">🗂 Filter Locations</label>
+        <div class="filter-chips">
+          <button class="chip active" onclick="filterMarkers('All')">All</button>
+          <button class="chip" onclick="filterMarkers('Transport Hub')">🚌 Transport</button>
+          <button class="chip" onclick="filterMarkers('Hospital')">🏥 Hospital</button>
+          <button class="chip" onclick="filterMarkers('College')">🎓 College</button>
+          <button class="chip" onclick="filterMarkers('Mall')">🛍 Mall</button>
+          <button class="chip" onclick="filterMarkers('Tourist Place')">🏔 Tourist</button>
+          <button class="chip" onclick="filterMarkers('Market')">🏪 Market</button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ─── PANEL: MAP ─── -->
+    <section class="panel active" id="panelMap">
+      <div id="map" class="map-container"></div>
+      <!-- Map overlays -->
+      <div class="map-overlay-btns">
+        <button class="map-fab" onclick="recenterMap()" title="Recenter">🎯</button>
+        <button class="map-fab" onclick="toggleTrafficLayer()" title="Traffic layer" id="trafficToggle">🚦</button>
+        <button class="map-fab" onclick="clearRoute()" title="Clear route">🗑</button>
+      </div>
+      <div class="map-info-card" id="mapInfoCard" style="display:none;"></div>
+    </section>
+
+    <!-- ─── PANEL: ROUTES ─── -->
+    <section class="panel" id="panelRoute">
+      <div class="panel-page">
+        <div class="panel-header">
+          <h2 class="panel-title">🛣 All Shortest Paths</h2>
+          <p class="panel-sub">Computed from Clock Tower using Dijkstra + real Haversine distances</p>
+        </div>
+        <div class="algo-overview-grid" id="dijkstraTable"></div>
+        <div class="floyd-section">
+          <h3 class="section-title">Floyd-Warshall Distance Matrix</h3>
+          <div class="matrix-wrap" id="floydMatrix"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PANEL: TRAFFIC ─── -->
+    <section class="panel" id="panelTraffic">
+      <div class="panel-page">
+        <div class="panel-header">
+          <h2 class="panel-title">🚦 Live Traffic Simulation</h2>
+          <p class="panel-sub">Real-time traffic delay simulation across Dehradun routes</p>
+        </div>
+        <button class="btn-primary" style="width:fit-content;" onclick="runTrafficSim()">▶ Run Simulation</button>
+        <div class="traffic-grid" id="trafficGrid"></div>
+      </div>
+    </section>
+
+    <!-- ─── PANEL: WEATHER ─── -->
+    <section class="panel" id="panelWeather">
+      <div class="panel-page">
+        <div class="panel-header">
+          <h2 class="panel-title">🌤 Weather Impact Simulator</h2>
+          <p class="panel-sub">See how weather conditions affect travel cost on each route</p>
+        </div>
+        <button class="btn-primary" style="width:fit-content;" onclick="runWeatherSim()">🔄 Simulate Weather</button>
+        <div class="weather-cards" id="weatherCards"></div>
+      </div>
+    </section>
+
+    <!-- ─── PANEL: CHATBOT ─── -->
+    <section class="panel" id="panelBot">
+      <div class="chatbot-layout">
+        <div class="chat-header">
+          <div class="chat-avatar">🤖</div>
+          <div>
+            <div class="chat-name">Wayfinder AI</div>
+            <div class="chat-online">Online · Dehradun Navigator</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg bot-msg">
+            <div class="msg-bubble">
+              👋 Hi! I'm Wayfinder AI. Ask me about <strong>hospitals</strong>, <strong>colleges</strong>, <strong>malls</strong>, <strong>tourist spots</strong>, <strong>transport hubs</strong>, or type a location name for directions!
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" class="chat-input" placeholder="Ask about locations, routes, traffic…" onkeydown="if(event.key==='Enter') sendChat()" />
+          <button class="chat-send" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PANEL: FEEDBACK ─── -->
+    <section class="panel" id="panelFeedback">
+      <div class="panel-page" style="max-width:700px;margin:0 auto;">
+        <div class="panel-header">
+          <h2 class="panel-title">💬 User Feedback</h2>
+          <p class="panel-sub">Share your experience with Wayfinder</p>
+        </div>
+        <form class="feedback-form" onsubmit="submitFeedback(event)">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" id="fbName" class="form-input" placeholder="Enter your name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Feedback</label>
+            <textarea id="fbMessage" class="form-input form-textarea" placeholder="Share your experience…" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rating</label>
+            <div class="star-row" id="starRow">
+              <span class="star" data-val="1" onclick="setRating(1)">★</span>
+              <span class="star" data-val="2" onclick="setRating(2)">★</span>
+              <span class="star" data-val="3" onclick="setRating(3)">★</span>
+              <span class="star" data-val="4" onclick="setRating(4)">★</span>
+              <span class="star" data-val="5" onclick="setRating(5)">★</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Submit Feedback 🚀</button>
+        </form>
+
+        <!-- FEEDBACK LIST -->
+        <div class="feedback-list" id="feedbackList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--
+    ═══════════════════════════════════════════════════════════
+    GOOGLE MAPS API KEY - User input
+    ═══════════════════════════════════════════════════════════
+  -->
+  <div style="margin: 20px; text-align:center;">
+    <input id="apiKeyInput" type="text" placeholder="Enter Google Maps API Key" style="width:300px;">
+    <button onclick="loadGoogleMaps()">Load Map</button>
+  </div>
+  <script>
+    function loadGoogleMaps() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      if (!key) {
+        alert('Please enter a valid API key!');
+        return;
+      }
+      // Remove any existing Google Maps script
+      const oldScript = document.getElementById('gmaps-script');
+      if (oldScript) oldScript.remove();
+      // Create new script tag
+      const script = document.createElement('script');
+      script.id = 'gmaps-script';
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places,geometry&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+    // Optional: auto-load if key is in localStorage
+    window.onload = function() {
+      const savedKey = localStorage.getItem('mapsApiKey');
+      if (savedKey) {
+        document.getElementById('apiKeyInput').value = savedKey;
+        loadGoogleMaps();
+      }
+    }
+    // Save key on input
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('apiKeyInput').addEventListener('change', function(e) {
+        localStorage.setItem('mapsApiKey', e.target.value.trim());
+      });
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

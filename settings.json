@@ -1,0 +1,9 @@
+{
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.maven.enabled": true,
+  "files.exclude": {
+    "**/.m2": true,
+    "**/target": true
+  }
+}

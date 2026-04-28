@@ -1,0 +1,104 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "ChatbotService",
+      "request": "launch",
+      "mainClass": "wayfinder.ChatbotService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "SignupService",
+      "request": "launch",
+      "mainClass": "wayfinder.SignupService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "AuthService",
+      "request": "launch",
+      "mainClass": "wayfinder.AuthService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "AStarService",
+      "request": "launch",
+      "mainClass": "wayfinder.AStarService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "FloydWarshallService",
+      "request": "launch",
+      "mainClass": "wayfinder.FloydWarshallService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "MongoGraphService",
+      "request": "launch",
+      "mainClass": "wayfinder.MongoGraphService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "type": "java",
+      "name": "LoginService",
+      "request": "launch",
+      "mainClass": "wayfinder.LoginService",
+      "projectName": "wayfinder-backend"
+    },
+    {
+      "name": "Wayfinder Web UI",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/c",
+        "run_web.bat"
+      ],
+      "cwd": "${workspaceFolder}\\backend",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Wayfinder Backend",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/c",
+        "run_backend.bat"
+      ],
+      "cwd": "${workspaceFolder}\\backend",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Wayfinder Login",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/c",
+        "run_java.bat",
+        "LoginService"
+      ],
+      "cwd": "${workspaceFolder}\\backend",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Wayfinder Chatbot",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/c",
+        "run_java.bat",
+        "ChatbotService"
+      ],
+      "cwd": "${workspaceFolder}\\backend",
+      "console": "integratedTerminal"
+    }
+  ]
+}
